@@ -36,16 +36,19 @@ const Main = () => {
   const [selectedTime, setSelectedTime] = useState('');
   const [selectedMedicine, setSelectedMedicine] = useState('');
   const [selectedState, setSelectedState] = useState('');
+
+  const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
+  
   
   const itemsPerPage = 10;
 
   // Initial data loading
   useEffect(() => {
-    axios.get('http://localhost:7000/api/medicines')
+    axios.get(`${API_BASE_URL}/api/medicines`)
       .then(res => setMedicines(res.data))
       .catch(err => console.error(err));
 
-    axios.get('http://localhost:7000/api/states')
+    axios.get(`${API_BASE_URL}/api/states`)
       .then(res => setStates(res.data))
       .catch(err => console.error(err));
       
@@ -93,7 +96,7 @@ const Main = () => {
   // Data fetching functions
   const fetchAllForecasts = () => {
     setIsLoading(true);
-    axios.get('http://127.0.0.1:7000/api/all_forecasts')
+    axios.get(`${API_BASE_URL}/api/all_forecasts`)
       .then(res => {
         if (res.data && res.data.length > 0 && res.data[0].forecasts) {
           setAllForecasts(res.data[0].forecasts);
@@ -110,7 +113,7 @@ const Main = () => {
   };
 
   const fetchStockWarnings = () => {
-    axios.get('http://127.0.0.1:7000/api/stock')
+    axios.get(`${API_BASE_URL}/api/stock`)
       .then(res => {
         setStockWarnings(res.data);
       })
@@ -118,7 +121,7 @@ const Main = () => {
   };
 
   const fetchForecastData = () => {
-    axios.get('http://127.0.0.1:7000/api/forecast')
+    axios.get(`${API_BASE_URL}/api/forecast`)
       .then(res => {
         const data = res.data;
         const dates = Object.keys(data).map(date => date.split(' ')[0]);
@@ -144,7 +147,7 @@ const Main = () => {
   // Event handlers
   const handleRefreshData = () => {
     setIsRefreshing(true);
-    axios.get('http://127.0.0.1:7000/api/all_forecast_post')
+    axios.get(`${API_BASE_URL}/api/all_forecast_post`)
       .then(res => {
         console.log('Forecast data refreshed:', res.data);
         // Refetch all data after refresh
@@ -163,7 +166,7 @@ const Main = () => {
       state: selectedState
     };
 
-    axios.post('http://localhost:7000/api/selection', payload)
+    axios.post(`${API_BASE_URL}/api/selection`, payload)
       .then(res => {
         console.log(res.data.message);
         fetchForecastData();
